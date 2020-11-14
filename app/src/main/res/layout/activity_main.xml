@@ -43,9 +43,31 @@
         android:background="@color/black"
         android:alpha="0.5"/>
 
-    <include
-        layout="@layout/hud"
+    <LinearLayout
+        android:id="@+id/hud"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <include
+            layout="@layout/hud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/shadow_for_start_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:alpha="0.5"
+        android:orientation="horizontal" />
+    <LinearLayout
+        android:id="@+id/start_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include
+            layout="@layout/start_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </RelativeLayout>
