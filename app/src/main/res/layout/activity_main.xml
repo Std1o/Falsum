@@ -60,13 +60,42 @@
                 android:textColor="@color/white"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="17sp"
+                    android:layout_centerVertical="true"
                     android:text="Your balance:"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        android:text="1000 FC"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLogin"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Add"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"
+                        app:cornerRadius="10dp"
+                        app:strokeColor="@color/white" />
+                </LinearLayout>
 
             </RelativeLayout>
         </LinearLayout>
