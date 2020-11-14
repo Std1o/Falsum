@@ -84,11 +84,10 @@
                         android:layout_marginRight="5dp"
                         android:text="1000 FC"/>
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnLogin"
+                        android:id="@+id/btnAdd"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:text="Add"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#FFFFFF"
@@ -98,6 +97,44 @@
                 </LinearLayout>
 
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDecrease"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    app:cornerRadius="10dp"
+                    app:strokeColor="@color/white" />
+
+                <ProgressBar
+                    android:id="@+id/progressId"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:progressDrawable="@drawable/progress_color"
+                    android:progress="30" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnIncrease"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    app:cornerRadius="10dp"
+                    app:strokeColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
         <TextView
             android:layout_width="250dp"
