@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    LinearLayout hud, start_menu, shadow_for_start_menu;
+    LinearLayout hud, start_menu, shadow_for_start_menu, input_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +26,18 @@ public class MainActivity extends AppCompatActivity {
         hud = findViewById(R.id.hud);
         start_menu = findViewById(R.id.start_menu);
         shadow_for_start_menu = findViewById(R.id.shadow_for_start_menu);
+        input_name = findViewById(R.id.input_name);
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnStart:
-                hud.setVisibility(View.VISIBLE);
+                input_name.setVisibility(View.VISIBLE);
                 start_menu.setVisibility(View.GONE);
+                break;
+            case R.id.btnInputName:
+                hud.setVisibility(View.VISIBLE);
+                input_name.setVisibility(View.GONE);
                 shadow_for_start_menu.setVisibility(View.GONE);
                 break;
         }
