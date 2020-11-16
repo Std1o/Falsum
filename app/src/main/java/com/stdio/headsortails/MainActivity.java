@@ -12,15 +12,19 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvName, tvBet;
     MaterialButton btnContinue;
     ProgressBar progressBar;
+    ImageView ivHeads;
     DBHelper dbHelper;
     SQLiteDatabase database;
     SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
@@ -36,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
     String name = "";
     int balance = 0, bill = 0;
     int id = 0;
+    int animPosition = 0;
     int[][] states = new int[][] {
             new int[] { android.R.attr.state_enabled}, // enabled
             new int[] {-android.R.attr.state_enabled}, // disabled
             new int[] {-android.R.attr.state_checked}, // unchecked
             new int[] { android.R.attr.state_pressed}  // pressed
     };
+    int[] tails = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6, R.drawable.i7,
+            R.drawable.i8, R.drawable.i1};
 
     int[] colors = new int[] {
             Color.WHITE,
@@ -80,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         tvBet = findViewById(R.id.tvBet);
         btnContinue = findViewById(R.id.btnContinue);
         progressBar = findViewById(R.id.progressBar);
+        ivHeads = findViewById(R.id.ivHeads);
     }
 
     public void onClick(View v) {
@@ -114,6 +123,32 @@ public class MainActivity extends AppCompatActivity {
                         + id + "';");
                 tvBet.setText("Your BET: " + bill + " FC");
                 progressBar.setProgress(bill/10);
+                break;
+            case R.id.ivReverse:
+                final Timer myTimer = new Timer();
+                myTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (animPosition < tails.length) {
+                                    Glide.with(MainActivity.this) //Takes the context
+                                            .asBitmap()  //Tells glide that it is a bitmap
+                                            .load(tails[animPosition])
+                                            .into(ivHeads);
+                                }
+                                else {
+                                    myTimer.cancel();
+                                    animPosition = 0;
+                                }
+                            }
+                        });
+                        animPosition++;
+                    }
+
+                }, 0, 300);
+
                 break;
         }
     }

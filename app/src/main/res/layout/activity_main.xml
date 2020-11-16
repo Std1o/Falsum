@@ -26,6 +26,9 @@
             android:id="@+id/ivReverse"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onClick"
             android:layout_weight="1"
             app:srcCompat="@drawable/revers" />
 
@@ -33,6 +36,9 @@
             android:id="@+id/ivAvers"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onClick"
             android:layout_weight="1"
             app:srcCompat="@drawable/avers" />
     </LinearLayout>
