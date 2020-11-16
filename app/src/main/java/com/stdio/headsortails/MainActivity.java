@@ -35,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivHeads;
     DBHelper dbHelper;
     SQLiteDatabase database;
-    SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
-    SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+    SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy"), sdfTime = new SimpleDateFormat("HH:mm");
     Date currentDateTime = Calendar.getInstance().getTime();
     String name = "";
     int balance = 0, bill = 0;
@@ -48,15 +47,12 @@ public class MainActivity extends AppCompatActivity {
             new int[] {-android.R.attr.state_checked}, // unchecked
             new int[] { android.R.attr.state_pressed}  // pressed
     };
-    int[] tails = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6, R.drawable.i7,
+    int[] heads = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6, R.drawable.i7,
             R.drawable.i8, R.drawable.i1};
+    int[] tails = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6, R.drawable.i7,
+            R.drawable.i8, R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5};
 
-    int[] colors = new int[] {
-            Color.WHITE,
-            Color.GRAY,
-            Color.WHITE,
-            Color.WHITE
-    };
+    int[] colors = new int[] {Color.WHITE, Color.GRAY, Color.WHITE, Color.WHITE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,30 +121,36 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setProgress(bill/10);
                 break;
             case R.id.ivReverse:
-                final Timer myTimer = new Timer();
-                myTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println(animPosition);
-                                if (animPosition < tails.length) {
-                                    ivHeads.setImageDrawable(getResources().getDrawable(tails[animPosition]));
-                                }
-                                else {
-                                    myTimer.cancel();
-                                    animPosition = 0;
-                                }
-                                animPosition++;
-                            }
-                        });
-                    }
-
-                }, 0, 300);
-
+                showAnim(tails);
+                break;
+            case R.id.ivAvers:
+                showAnim(heads);
                 break;
         }
+    }
+
+    private void showAnim(int[] images) {
+        final Timer myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(animPosition);
+                        if (animPosition < images.length) {
+                            ivHeads.setImageDrawable(getResources().getDrawable(images[animPosition]));
+                        }
+                        else {
+                            myTimer.cancel();
+                            animPosition = 0;
+                        }
+                        animPosition++;
+                    }
+                });
+            }
+
+        }, 0, 300);
     }
 
     private void saveInitialConfigurations() {
