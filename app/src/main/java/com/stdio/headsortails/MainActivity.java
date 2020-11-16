@@ -3,8 +3,10 @@ package com.stdio.headsortails;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -12,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name;
     EditText etName;
     TextView tvName;
+    MaterialButton btnContinue;
     DBHelper dbHelper;
     SQLiteDatabase database;
     SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
@@ -28,6 +33,19 @@ public class MainActivity extends AppCompatActivity {
     Date currentDateTime = Calendar.getInstance().getTime();
     String name = "";
     int balance = 0;
+    int[][] states = new int[][] {
+            new int[] { android.R.attr.state_enabled}, // enabled
+            new int[] {-android.R.attr.state_enabled}, // disabled
+            new int[] {-android.R.attr.state_checked}, // unchecked
+            new int[] { android.R.attr.state_pressed}  // pressed
+    };
+
+    int[] colors = new int[] {
+            Color.WHITE,
+            Color.GRAY,
+            Color.WHITE,
+            Color.WHITE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         input_name = findViewById(R.id.input_name);
         etName = findViewById(R.id.etName);
         tvName = findViewById(R.id.tvName);
+        btnContinue = findViewById(R.id.btnContinue);
     }
 
     public void onClick(View v) {
@@ -68,10 +87,16 @@ public class MainActivity extends AppCompatActivity {
                 shadow_for_start_menu.setVisibility(View.GONE);
                 saveInitialConfigurations();
                 break;
+            case R.id.btnContinue:
+                hud.setVisibility(View.VISIBLE);
+                start_menu.setVisibility(View.GONE);
+                shadow_for_start_menu.setVisibility(View.GONE);
+                break;
         }
     }
 
     private void saveInitialConfigurations() {
+        database.delete(DBHelper.TABLE_CONFIGURATIONS, null, null);
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.KEY_NAME, etName.getText().toString());
         contentValues.put(DBHelper.KEY_DATE, sdfDate.format(currentDateTime));
@@ -95,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
             balance = cursor.getInt(balanceIndex);
         } else {
             cursor.close();
+            btnContinue.setEnabled(false);
+            btnContinue.setStrokeColor(new ColorStateList(states, colors));
+            btnContinue.setTextColor(Color.GRAY);
         }
     }
 }
