@@ -132,19 +132,17 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                System.out.println(animPosition);
                                 if (animPosition < tails.length) {
-                                    Glide.with(MainActivity.this) //Takes the context
-                                            .asBitmap()  //Tells glide that it is a bitmap
-                                            .load(tails[animPosition])
-                                            .into(ivHeads);
+                                    ivHeads.setImageDrawable(getResources().getDrawable(tails[animPosition]));
                                 }
                                 else {
                                     myTimer.cancel();
                                     animPosition = 0;
                                 }
+                                animPosition++;
                             }
                         });
-                        animPosition++;
                     }
 
                 }, 0, 300);
