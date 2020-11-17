@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog, bill_dialog;
     RelativeLayout winLayout;
     EditText etName;
-    TextView tvName, tvBet, tvBalance, tvCongratulationsDate, tvCongratulationsName;
+    TextView tvName, tvBet, tvBalance, tvCongratulationsDate, tvCongratulationsName, tvName2, tvSum, tvBillDate;
     MaterialButton btnContinue;
     ProgressBar progressBar;
     ImageView ivHeads;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     Random random = new Random();
     boolean isHeads, userWon;
     MediaPlayer mPlayer;
-    String selected;
+    String selected, billDate, billTime;
     int id = 0;
     int animPosition = 0;
     int[][] states = new int[][]{
@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         ivHeads = findViewById(R.id.ivHeads);
         tvBalance = findViewById(R.id.tvBalance);
+        tvName2 = findViewById(R.id.tvName2);
+        tvSum = findViewById(R.id.tvSum);
+        tvBillDate = findViewById(R.id.tvBillDate);
     }
 
     public void onClick(View v) {
@@ -164,12 +167,28 @@ public class MainActivity extends AppCompatActivity {
                 layoutToImage();
                 break;
             case R.id.btnAdd:
+                tvName2.setText(name);
+                tvBillDate.setText(billDate + " " + billTime);
+                tvSum.setText(balance + " FC");
                 shadow_for_start_menu.setVisibility(View.VISIBLE);
                 bill_dialog.setVisibility(View.VISIBLE);
                 break;
             case R.id.rl_bill:
                 bill_dialog.setVisibility(View.GONE);
                 shadow_for_start_menu.setVisibility(View.GONE);
+                break;
+            case R.id.btnBetAll:
+                bill = balance;
+                tvBet.setText(bill + " FC");
+                database.execSQL("UPDATE configurations SET bill = '" + bill + "' WHERE _id='"
+                        + id + "';");
+                progressBar.setProgress(bill/10);
+                bill_dialog.setVisibility(View.GONE);
+                shadow_for_start_menu.setVisibility(View.GONE);
+                break;
+            case R.id.btnAddBill:
+                balance += 1000;
+                tvSum.setText(balance + " FC");
                 break;
         }
     }
@@ -289,10 +308,14 @@ public class MainActivity extends AppCompatActivity {
             int nameIndex = cursor.getColumnIndex(DBHelper.KEY_NAME);
             int balanceIndex = cursor.getColumnIndex(DBHelper.KEY_BALANCE);
             int billIndex = cursor.getColumnIndex(DBHelper.KEY_BILL);
+            int billDateIndex = cursor.getColumnIndex(DBHelper.KEY_BILL_DATE);
+            int billTimeIndex = cursor.getColumnIndex(DBHelper.KEY_BILL_TIME);
             int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
             name = cursor.getString(nameIndex);
             balance = cursor.getInt(balanceIndex);
             bill = cursor.getInt(billIndex);
+            billDate = cursor.getString(billDateIndex);
+            billTime = cursor.getString(billTimeIndex);
             id = cursor.getInt(idIndex);
         } else {
             cursor.close();
