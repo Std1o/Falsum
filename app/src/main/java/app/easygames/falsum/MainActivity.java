@@ -159,10 +159,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.ivReverse:
                 selected = "tails";
+                playSound(R.raw.spin);
                 generateResult();
                 break;
             case R.id.ivAvers:
                 selected = "heads";
+                playSound(R.raw.spin);
                 generateResult();
                 break;
             case R.id.rl_win:
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                             myTimer.cancel();
                             animPosition = 0;
                             if (userWon) {
-                                Toast.makeText(MainActivity.this, "You win", Toast.LENGTH_SHORT).show();
+                                playSound(R.raw.win);
                                 balance += bill;
                                 int thousand = 1000;
                                 if (balance > 10 * thousand && reward < 1) {
@@ -286,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
                                             + id + "';");
                                 }
                             } else {
+                                playSound(R.raw.lose);
                                 balance -= bill;
                             }
                             database.execSQL("UPDATE configurations SET balance = '" + balance + "' WHERE _id='"
@@ -298,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
 
-        }, 0, 300);
+        }, 0, 100);
     }
 
     private void showWinDialog() {
