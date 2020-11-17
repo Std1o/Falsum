@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
@@ -23,6 +24,7 @@ import com.google.android.material.button.MaterialButton;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     Date currentDateTime = Calendar.getInstance().getTime();
     String name = "";
     int balance = 0, bill = 0;
+    Random random = new Random();
+    boolean isHeads, userWon;
+    String selected;
     int id = 0;
     int animPosition = 0;
     int[][] states = new int[][] {
@@ -121,11 +126,29 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setProgress(bill/10);
                 break;
             case R.id.ivReverse:
-                showAnim(tails);
+                selected = "tails";
+                generateResult();
                 break;
             case R.id.ivAvers:
-                showAnim(heads);
+                selected = "heads";
+                generateResult();
                 break;
+        }
+    }
+
+
+    private void generateResult() {
+        isHeads = random.nextBoolean();
+        if (isHeads) {
+            showAnim(heads);
+            if (selected.equals("heads")) {
+                userWon = true;
+            }
+        } else {
+            showAnim(tails);
+            if (selected.equals("tails")) {
+                userWon = true;
+            }
         }
     }
 
@@ -144,6 +167,10 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             myTimer.cancel();
                             animPosition = 0;
+                            if (userWon) {
+                                Toast.makeText(MainActivity.this, "You win", Toast.LENGTH_SHORT).show();
+                            }
+                            userWon = false;
                         }
                         animPosition++;
                     }
