@@ -204,6 +204,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.ivShareForBill:
                 layoutToImage(billLayout);
                 break;
+            case R.id.ivClose:
+                win_dialog.setVisibility(View.GONE);
+                bill_dialog.setVisibility(View.GONE);
+                shadow_for_start_menu.setVisibility(View.GONE);
+                break;
         }
     }
 
