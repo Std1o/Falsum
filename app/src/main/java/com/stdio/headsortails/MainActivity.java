@@ -43,7 +43,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog;
+    LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog, bill_dialog;
     RelativeLayout winLayout;
     EditText etName;
     TextView tvName, tvBet, tvBalance, tvCongratulationsDate, tvCongratulationsName;
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         shadow_for_start_menu = findViewById(R.id.shadow_for_start_menu);
         input_name = findViewById(R.id.input_name);
         win_dialog = findViewById(R.id.win_dialog);
+        bill_dialog = findViewById(R.id.bill_dialog);
         winLayout = findViewById(R.id.winLayout);
         etName = findViewById(R.id.etName);
         tvName = findViewById(R.id.tvName);
@@ -157,9 +158,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.rl_win:
                 win_dialog.setVisibility(View.GONE);
+                shadow_for_start_menu.setVisibility(View.GONE);
                 break;
             case R.id.ivShare:
                 layoutToImage();
+                break;
+            case R.id.btnAdd:
+                shadow_for_start_menu.setVisibility(View.VISIBLE);
+                bill_dialog.setVisibility(View.VISIBLE);
+                break;
+            case R.id.rl_bill:
+                bill_dialog.setVisibility(View.GONE);
+                shadow_for_start_menu.setVisibility(View.GONE);
                 break;
         }
     }
@@ -229,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
                                 balance += bill;
                                 if (balance > 3000) {
                                     win_dialog.setVisibility(View.VISIBLE);
+                                    shadow_for_start_menu.setVisibility(View.VISIBLE);
                                     tvCongratulationsDate.setText(sdfDate.format(currentDateTime) + " " + sdfTime.format(currentDateTime));
                                     tvCongratulationsName.setText(name);
                                 }
