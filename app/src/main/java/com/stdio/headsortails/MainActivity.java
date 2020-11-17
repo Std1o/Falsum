@@ -30,7 +30,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    LinearLayout hud, start_menu, shadow_for_start_menu, input_name;
+    LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog;
     EditText etName;
     TextView tvName, tvBet, tvBalance;
     MaterialButton btnContinue;
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         start_menu = findViewById(R.id.start_menu);
         shadow_for_start_menu = findViewById(R.id.shadow_for_start_menu);
         input_name = findViewById(R.id.input_name);
+        win_dialog = findViewById(R.id.win_dialog);
         etName = findViewById(R.id.etName);
         tvName = findViewById(R.id.tvName);
         tvBet = findViewById(R.id.tvBet);
@@ -137,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
                 selected = "heads";
                 generateResult();
                 break;
+            case R.id.rl_win:
+                win_dialog.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -174,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
                             if (userWon) {
                                 Toast.makeText(MainActivity.this, "You win", Toast.LENGTH_SHORT).show();
                                 balance += bill;
+                                if (balance > 3000) {
+                                    win_dialog.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 balance -= bill;
                             }
