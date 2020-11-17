@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy"), sdfTime = new SimpleDateFormat("HH:mm");
     Date currentDateTime = Calendar.getInstance().getTime();
     String name = "";
-    int balance = 0, bill = 0;
+    int balance = 0, bill = 0, reward = 0;
     Random random = new Random();
     boolean isHeads, userWon;
     MediaPlayer mPlayer;
@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
         getData();
+        setContent();
+    }
+
+    private void setContent() {
         tvName.setText(name);
         tvBet.setText("Your BET: " + bill + " FC");
         progressBar.setProgress(bill / 10);
@@ -131,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 shadow_for_start_menu.setVisibility(View.GONE);
                 saveInitialConfigurations();
                 getData();
-                tvName.setText(name);
+                setContent();
                 break;
             case R.id.btnContinue:
                 hud.setVisibility(View.VISIBLE);
@@ -190,6 +194,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnAddBill:
                 balance += 1000;
                 tvSum.setText(balance + " FC");
+                tvBalance.setText(balance + " FC");
+                database.execSQL("UPDATE configurations SET balance = '" + balance + "' WHERE _id='"
+                        + id + "';");
                 break;
             case R.id.ivShareForBill:
                 layoutToImage(billLayout);
@@ -260,11 +267,22 @@ public class MainActivity extends AppCompatActivity {
                             if (userWon) {
                                 Toast.makeText(MainActivity.this, "You win", Toast.LENGTH_SHORT).show();
                                 balance += bill;
-                                if (balance > 3000) {
-                                    win_dialog.setVisibility(View.VISIBLE);
-                                    shadow_for_start_menu.setVisibility(View.VISIBLE);
-                                    tvCongratulationsDate.setText(sdfDate.format(currentDateTime) + " " + sdfTime.format(currentDateTime));
-                                    tvCongratulationsName.setText(name);
+                                int thousand = 1000;
+                                if (balance > 10 * thousand && reward < 1) {
+                                    reward = 1;
+                                    showWinDialog();
+                                    database.execSQL("UPDATE configurations SET reward = '" + reward + "' WHERE _id='"
+                                            + id + "';");
+                                } else if (balance > 100 * thousand && reward < 2) {
+                                    reward = 2;
+                                    showWinDialog();
+                                    database.execSQL("UPDATE configurations SET reward = '" + reward + "' WHERE _id='"
+                                            + id + "';");
+                                } else if (balance > 1000 * thousand && reward < 3) {
+                                    reward = 3;
+                                    showWinDialog();
+                                    database.execSQL("UPDATE configurations SET reward = '" + reward + "' WHERE _id='"
+                                            + id + "';");
                                 }
                             } else {
                                 balance -= bill;
@@ -280,6 +298,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }, 0, 300);
+    }
+
+    private void showWinDialog() {
+        win_dialog.setVisibility(View.VISIBLE);
+        shadow_for_start_menu.setVisibility(View.VISIBLE);
+        tvCongratulationsDate.setText(sdfDate.format(currentDateTime) + " " + sdfTime.format(currentDateTime));
+        tvCongratulationsName.setText(name);
     }
 
     private void playSound(int rawSound) {
@@ -314,12 +339,14 @@ public class MainActivity extends AppCompatActivity {
             int billIndex = cursor.getColumnIndex(DBHelper.KEY_BILL);
             int billDateIndex = cursor.getColumnIndex(DBHelper.KEY_BILL_DATE);
             int billTimeIndex = cursor.getColumnIndex(DBHelper.KEY_BILL_TIME);
+            int rewardIndex = cursor.getColumnIndex(DBHelper.KEY_REWARD);
             int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
             name = cursor.getString(nameIndex);
             balance = cursor.getInt(balanceIndex);
             bill = cursor.getInt(billIndex);
             billDate = cursor.getString(billDateIndex);
             billTime = cursor.getString(billTimeIndex);
+            reward = cursor.getInt(rewardIndex);
             id = cursor.getInt(idIndex);
         } else {
             cursor.close();
