@@ -31,7 +31,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name;
     EditText etName;
-    TextView tvName, tvBet;
+    TextView tvName, tvBet, tvBalance;
     MaterialButton btnContinue;
     ProgressBar progressBar;
     ImageView ivHeads;
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         tvName.setText(name);
         tvBet.setText("Your BET: " + bill + " FC");
         progressBar.setProgress(bill/10);
+        tvBalance.setText(balance + " FC");
     }
 
     private void setFullScreen() {
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         btnContinue = findViewById(R.id.btnContinue);
         progressBar = findViewById(R.id.progressBar);
         ivHeads = findViewById(R.id.ivHeads);
+        tvBalance = findViewById(R.id.tvBalance);
     }
 
     public void onClick(View v) {
@@ -169,7 +171,13 @@ public class MainActivity extends AppCompatActivity {
                             animPosition = 0;
                             if (userWon) {
                                 Toast.makeText(MainActivity.this, "You win", Toast.LENGTH_SHORT).show();
+                                balance += bill;
+                            } else {
+                                balance -= bill;
                             }
+                            database.execSQL("UPDATE configurations SET balance = '" + balance +  "' WHERE _id='"
+                                    + id + "';");
+                            tvBalance.setText(balance + " FC");
                             userWon = false;
                         }
                         animPosition++;
