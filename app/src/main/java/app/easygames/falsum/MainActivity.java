@@ -1,9 +1,10 @@
-package com.stdio.headsortails;
+package app.easygames.falsum;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,15 +28,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.stdio.headsortails.R;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -136,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 saveInitialConfigurations();
                 getData();
                 setContent();
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etName.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
                 break;
             case R.id.btnContinue:
                 hud.setVisibility(View.VISIBLE);

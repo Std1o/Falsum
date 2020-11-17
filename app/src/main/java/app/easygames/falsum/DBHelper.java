@@ -1,4 +1,4 @@
-package com.stdio.headsortails;
+package app.easygames.falsum;
 
 
 import android.content.Context;
