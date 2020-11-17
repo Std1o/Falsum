@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     int balance = 0, bill = 0;
     Random random = new Random();
     boolean isHeads, userWon;
+    MediaPlayer mPlayer;
     String selected;
     int id = 0;
     int animPosition = 0;
@@ -186,6 +188,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }, 0, 300);
+    }
+
+    private void playSound(int rawSound) {
+        if (mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.reset();
+        }
+        mPlayer = MediaPlayer.create(this, rawSound);
+        mPlayer.start();
     }
 
     private void saveInitialConfigurations() {
