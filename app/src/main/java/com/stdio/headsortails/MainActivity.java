@@ -1,14 +1,20 @@
 package com.stdio.headsortails;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,12 +22,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,6 +44,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog;
+    RelativeLayout winLayout;
     EditText etName;
     TextView tvName, tvBet, tvBalance, tvCongratulationsDate, tvCongratulationsName;
     MaterialButton btnContinue;
@@ -48,18 +62,18 @@ public class MainActivity extends AppCompatActivity {
     String selected;
     int id = 0;
     int animPosition = 0;
-    int[][] states = new int[][] {
-            new int[] { android.R.attr.state_enabled}, // enabled
-            new int[] {-android.R.attr.state_enabled}, // disabled
-            new int[] {-android.R.attr.state_checked}, // unchecked
-            new int[] { android.R.attr.state_pressed}  // pressed
+    int[][] states = new int[][]{
+            new int[]{android.R.attr.state_enabled}, // enabled
+            new int[]{-android.R.attr.state_enabled}, // disabled
+            new int[]{-android.R.attr.state_checked}, // unchecked
+            new int[]{android.R.attr.state_pressed}  // pressed
     };
     int[] heads = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6, R.drawable.i7,
             R.drawable.i8, R.drawable.i1};
     int[] tails = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6, R.drawable.i7,
             R.drawable.i8, R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5};
 
-    int[] colors = new int[] {Color.WHITE, Color.GRAY, Color.WHITE, Color.WHITE};
+    int[] colors = new int[]{Color.WHITE, Color.GRAY, Color.WHITE, Color.WHITE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         getData();
         tvName.setText(name);
         tvBet.setText("Your BET: " + bill + " FC");
-        progressBar.setProgress(bill/10);
+        progressBar.setProgress(bill / 10);
         tvBalance.setText(balance + " FC");
     }
 
@@ -88,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         shadow_for_start_menu = findViewById(R.id.shadow_for_start_menu);
         input_name = findViewById(R.id.input_name);
         win_dialog = findViewById(R.id.win_dialog);
+        winLayout = findViewById(R.id.winLayout);
         etName = findViewById(R.id.etName);
         tvName = findViewById(R.id.tvName);
         tvBet = findViewById(R.id.tvBet);
@@ -119,18 +134,18 @@ public class MainActivity extends AppCompatActivity {
                 shadow_for_start_menu.setVisibility(View.GONE);
                 break;
             case R.id.btnDecrease:
-                bill = (bill - 100 > 0) ? (bill-100) : bill;
-                database.execSQL("UPDATE configurations SET bill = '" + bill +  "' WHERE _id='"
+                bill = (bill - 100 > 0) ? (bill - 100) : bill;
+                database.execSQL("UPDATE configurations SET bill = '" + bill + "' WHERE _id='"
                         + id + "';");
                 tvBet.setText("Your BET: " + bill + " FC");
-                progressBar.setProgress(bill/10);
+                progressBar.setProgress(bill / 10);
                 break;
             case R.id.btnIncrease:
                 bill += 100;
-                database.execSQL("UPDATE configurations SET bill = '" + bill +  "' WHERE _id='"
+                database.execSQL("UPDATE configurations SET bill = '" + bill + "' WHERE _id='"
                         + id + "';");
                 tvBet.setText("Your BET: " + bill + " FC");
-                progressBar.setProgress(bill/10);
+                progressBar.setProgress(bill / 10);
                 break;
             case R.id.ivReverse:
                 selected = "tails";
@@ -143,7 +158,40 @@ public class MainActivity extends AppCompatActivity {
             case R.id.rl_win:
                 win_dialog.setVisibility(View.GONE);
                 break;
+            case R.id.ivShare:
+                layoutToImage();
+                break;
         }
+    }
+
+    private void layoutToImage() {
+        winLayout.setDrawingCacheEnabled(true);
+        Bitmap bitmap = winLayout.getDrawingCache();
+        shareImageUri(saveImageExternal(bitmap));
+    }
+
+    private Uri saveImageExternal(Bitmap image) {
+        //TODO - Should be processed in another thread
+        Uri uri = null;
+        try {
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    sdfDate.format(currentDateTime) + "_ " + sdfTime.format(currentDateTime) + ".png");
+            FileOutputStream stream = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.close();
+            uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
+        } catch (IOException e) {
+            Log.d("TAG", "IOException while trying to write file for sharing: " + e.getMessage());
+        }
+        return uri;
+    }
+
+    private void shareImageUri(Uri uri){
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setType("image/png");
+        startActivity(intent);
     }
 
 
@@ -173,8 +221,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(animPosition);
                         if (animPosition < images.length) {
                             ivHeads.setImageDrawable(getResources().getDrawable(images[animPosition]));
-                        }
-                        else {
+                        } else {
                             myTimer.cancel();
                             animPosition = 0;
                             if (userWon) {
@@ -188,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 balance -= bill;
                             }
-                            database.execSQL("UPDATE configurations SET balance = '" + balance +  "' WHERE _id='"
+                            database.execSQL("UPDATE configurations SET balance = '" + balance + "' WHERE _id='"
                                     + id + "';");
                             tvBalance.setText(balance + " FC");
                             userWon = false;
@@ -198,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
 
-        }, 0, 300);                                                         
+        }, 0, 300);
     }
 
     private void playSound(int rawSound) {
