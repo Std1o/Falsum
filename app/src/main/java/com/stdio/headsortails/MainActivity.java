@@ -44,7 +44,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog, bill_dialog;
-    RelativeLayout winLayout;
+    RelativeLayout winLayout, billLayout;
     EditText etName;
     TextView tvName, tvBet, tvBalance, tvCongratulationsDate, tvCongratulationsName, tvName2, tvSum, tvBillDate;
     MaterialButton btnContinue;
@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         win_dialog = findViewById(R.id.win_dialog);
         bill_dialog = findViewById(R.id.bill_dialog);
         winLayout = findViewById(R.id.winLayout);
+        billLayout = findViewById(R.id.billLayout);
         etName = findViewById(R.id.etName);
         tvName = findViewById(R.id.tvName);
         tvBet = findViewById(R.id.tvBet);
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 shadow_for_start_menu.setVisibility(View.GONE);
                 break;
             case R.id.ivShare:
-                layoutToImage();
+                layoutToImage(winLayout);
                 break;
             case R.id.btnAdd:
                 tvName2.setText(name);
@@ -190,12 +191,15 @@ public class MainActivity extends AppCompatActivity {
                 balance += 1000;
                 tvSum.setText(balance + " FC");
                 break;
+            case R.id.ivShareForBill:
+                layoutToImage(billLayout);
+                break;
         }
     }
 
-    private void layoutToImage() {
-        winLayout.setDrawingCacheEnabled(true);
-        Bitmap bitmap = winLayout.getDrawingCache();
+    private void layoutToImage(RelativeLayout relativeLayout) {
+        relativeLayout.setDrawingCacheEnabled(true);
+        Bitmap bitmap = relativeLayout.getDrawingCache();
         shareImageUri(saveImageExternal(bitmap));
     }
 

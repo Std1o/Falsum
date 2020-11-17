@@ -113,7 +113,7 @@
             app:strokeColor="@color/white" />
     </LinearLayout>
     <ImageView
-        android:id="@+id/ivShare"
+        android:id="@+id/ivShareForBill"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:srcCompat="@drawable/share"
