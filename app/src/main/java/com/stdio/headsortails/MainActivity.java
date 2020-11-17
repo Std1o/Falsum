@@ -32,7 +32,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     LinearLayout hud, start_menu, shadow_for_start_menu, input_name, win_dialog;
     EditText etName;
-    TextView tvName, tvBet, tvBalance;
+    TextView tvName, tvBet, tvBalance, tvCongratulationsDate, tvCongratulationsName;
     MaterialButton btnContinue;
     ProgressBar progressBar;
     ImageView ivHeads;
@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         tvName = findViewById(R.id.tvName);
         tvBet = findViewById(R.id.tvBet);
+        tvCongratulationsDate = findViewById(R.id.tvCongratulationsDate);
+        tvCongratulationsName = findViewById(R.id.tvCongratulationsName);
         btnContinue = findViewById(R.id.btnContinue);
         progressBar = findViewById(R.id.progressBar);
         ivHeads = findViewById(R.id.ivHeads);
@@ -180,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
                                 balance += bill;
                                 if (balance > 3000) {
                                     win_dialog.setVisibility(View.VISIBLE);
+                                    tvCongratulationsDate.setText(sdfDate.format(currentDateTime) + " " + sdfTime.format(currentDateTime));
+                                    tvCongratulationsName.setText(name);
                                 }
                             } else {
                                 balance -= bill;
@@ -194,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
 
-        }, 0, 300);
+        }, 0, 300);                                                         
     }
 
     private void playSound(int rawSound) {
